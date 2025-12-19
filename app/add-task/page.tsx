@@ -1,10 +1,9 @@
 "use client"
 
 import type React from "react"
-
 import { useState, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
-import { Header } from "@/components/header"
+import { MainLayout } from "@/components/layout"
 import { useTask, type TaskStatus } from "@/context/task-context"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -126,21 +125,17 @@ function AddTaskForm() {
 
 export default function AddTaskPage() {
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
+    <MainLayout>
+      <Button variant="ghost" size="sm" asChild className="mb-6">
+        <Link href="/">
+          <ArrowLeft className="h-4 w-4 mr-2" />
+          Back
+        </Link>
+      </Button>
 
-      <main className="container mx-auto px-4 py-8">
-        <Button variant="ghost" size="sm" asChild className="mb-6">
-          <Link href="/">
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back
-          </Link>
-        </Button>
-
-        <Suspense fallback={<div className="max-w-xl mx-auto h-96 bg-muted rounded-xl animate-pulse" />}>
-          <AddTaskForm />
-        </Suspense>
-      </main>
-    </div>
+      <Suspense fallback={<div className="max-w-xl mx-auto h-96 bg-muted rounded-xl animate-pulse" />}>
+        <AddTaskForm />
+      </Suspense>
+    </MainLayout>
   )
 }
