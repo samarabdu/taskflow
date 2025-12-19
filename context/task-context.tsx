@@ -41,6 +41,75 @@ export function TaskProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true)
   const [darkMode, setDarkMode] = useState(false)
 
+  const projectNames = [
+    "Website Redesign",
+    "Mobile App Development",
+    "Marketing Campaign",
+    "Database Migration",
+    "UI/UX Improvements",
+    "API Integration",
+  ]
+
+  const projectDescriptions = [
+    "Modernize the company website with new design",
+    "Build cross-platform mobile application",
+    "Q4 marketing and social media strategy",
+    "Migrate legacy database to cloud",
+    "Improve user experience across all platforms",
+    "Connect third-party services and APIs",
+  ]
+
+  const taskTemplates = [
+    { title: "Create wireframes", description: "Design initial wireframes for review" },
+    { title: "Setup project repository", description: "Initialize Git repo and project structure" },
+    { title: "Design mockups", description: "Create high-fidelity design mockups" },
+    { title: "Implement authentication", description: "Add user login and registration" },
+    { title: "Build dashboard", description: "Create main dashboard interface" },
+    { title: "Write unit tests", description: "Add test coverage for components" },
+    { title: "API endpoint development", description: "Build REST API endpoints" },
+    { title: "Database schema design", description: "Design and create database tables" },
+    { title: "Code review", description: "Review and refactor existing code" },
+    { title: "Performance optimization", description: "Improve app loading speed" },
+    { title: "Bug fixes", description: "Fix reported issues and bugs" },
+    { title: "Documentation", description: "Write technical documentation" },
+    { title: "User testing", description: "Conduct user acceptance testing" },
+    { title: "Deployment setup", description: "Configure CI/CD pipeline" },
+    { title: "Security audit", description: "Review and fix security vulnerabilities" },
+    { title: "Responsive design", description: "Ensure mobile compatibility" },
+    { title: "Analytics integration", description: "Add tracking and analytics" },
+    { title: "Email notifications", description: "Implement email service" },
+    { title: "Search functionality", description: "Add search feature to app" },
+    { title: "Data backup system", description: "Setup automated backups" },
+    { title: "Error handling", description: "Improve error messages and logging" },
+    { title: "Accessibility review", description: "Ensure WCAG compliance" },
+    { title: "Load testing", description: "Test app under heavy traffic" },
+    { title: "SSL configuration", description: "Setup secure connections" },
+    { title: "Cache implementation", description: "Add caching for better performance" },
+    { title: "Payment integration", description: "Connect payment gateway" },
+    { title: "Report generation", description: "Build reporting features" },
+    { title: "User permissions", description: "Implement role-based access" },
+    { title: "Data migration", description: "Transfer data from old system" },
+    { title: "Final review", description: "Complete project review before launch" },
+  ]
+
+  const generateFallbackData = () => {
+    const fallbackProjects: Project[] = projectNames.map((name, index) => ({
+      id: String(index + 1),
+      title: name,
+      description: projectDescriptions[index],
+    }))
+
+    const fallbackTasks: Task[] = taskTemplates.slice(0, 18).map((template, index) => ({
+      id: String(index + 1),
+      title: template.title,
+      description: template.description,
+      status: (index % 3 === 0 ? "done" : index % 3 === 1 ? "in-progress" : "todo") as TaskStatus,
+      projectId: String((index % 6) + 1),
+    }))
+
+    return { fallbackProjects, fallbackTasks }
+  }
+
   useEffect(() => {
     const savedDarkMode = localStorage.getItem("darkMode")
     if (savedDarkMode === "true") {
@@ -65,28 +134,19 @@ export function TaskProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     async function fetchData() {
+      const { fallbackProjects, fallbackTasks } = generateFallbackData()
+
       try {
-        // Fetch users as projects from JSONPlaceholder API
-        const usersRes = await fetch("https://jsonplaceholder.typicode.com/users")
+        const controller = new AbortController()
+        const timeoutId = setTimeout(() => controller.abort(), 3000)
+
+        const usersRes = await fetch("https://jsonplaceholder.typicode.com/users", {
+          signal: controller.signal,
+        })
+        clearTimeout(timeoutId)
+
+        if (!usersRes.ok) throw new Error("API unavailable")
         const usersData = await usersRes.json()
-
-        const projectNames = [
-          "Website Redesign",
-          "Mobile App Development",
-          "Marketing Campaign",
-          "Database Migration",
-          "UI/UX Improvements",
-          "API Integration",
-        ]
-
-        const projectDescriptions = [
-          "Modernize the company website with new design",
-          "Build cross-platform mobile application",
-          "Q4 marketing and social media strategy",
-          "Migrate legacy database to cloud",
-          "Improve user experience across all platforms",
-          "Connect third-party services and APIs",
-        ]
 
         const fetchedProjects: Project[] = usersData.slice(0, 6).map((user: { id: number }, index: number) => ({
           id: String(user.id),
@@ -94,42 +154,16 @@ export function TaskProvider({ children }: { children: ReactNode }) {
           description: projectDescriptions[index],
         }))
 
-        // Fetch todos as tasks from JSONPlaceholder API
-        const todosRes = await fetch("https://jsonplaceholder.typicode.com/todos")
-        const todosData = await todosRes.json()
+        const todosController = new AbortController()
+        const todosTimeoutId = setTimeout(() => todosController.abort(), 3000)
 
-        const taskTemplates = [
-          { title: "Create wireframes", description: "Design initial wireframes for review" },
-          { title: "Setup project repository", description: "Initialize Git repo and project structure" },
-          { title: "Design mockups", description: "Create high-fidelity design mockups" },
-          { title: "Implement authentication", description: "Add user login and registration" },
-          { title: "Build dashboard", description: "Create main dashboard interface" },
-          { title: "Write unit tests", description: "Add test coverage for components" },
-          { title: "API endpoint development", description: "Build REST API endpoints" },
-          { title: "Database schema design", description: "Design and create database tables" },
-          { title: "Code review", description: "Review and refactor existing code" },
-          { title: "Performance optimization", description: "Improve app loading speed" },
-          { title: "Bug fixes", description: "Fix reported issues and bugs" },
-          { title: "Documentation", description: "Write technical documentation" },
-          { title: "User testing", description: "Conduct user acceptance testing" },
-          { title: "Deployment setup", description: "Configure CI/CD pipeline" },
-          { title: "Security audit", description: "Review and fix security vulnerabilities" },
-          { title: "Responsive design", description: "Ensure mobile compatibility" },
-          { title: "Analytics integration", description: "Add tracking and analytics" },
-          { title: "Email notifications", description: "Implement email service" },
-          { title: "Search functionality", description: "Add search feature to app" },
-          { title: "Data backup system", description: "Setup automated backups" },
-          { title: "Error handling", description: "Improve error messages and logging" },
-          { title: "Accessibility review", description: "Ensure WCAG compliance" },
-          { title: "Load testing", description: "Test app under heavy traffic" },
-          { title: "SSL configuration", description: "Setup secure connections" },
-          { title: "Cache implementation", description: "Add caching for better performance" },
-          { title: "Payment integration", description: "Connect payment gateway" },
-          { title: "Report generation", description: "Build reporting features" },
-          { title: "User permissions", description: "Implement role-based access" },
-          { title: "Data migration", description: "Transfer data from old system" },
-          { title: "Final review", description: "Complete project review before launch" },
-        ]
+        const todosRes = await fetch("https://jsonplaceholder.typicode.com/todos", {
+          signal: todosController.signal,
+        })
+        clearTimeout(todosTimeoutId)
+
+        if (!todosRes.ok) throw new Error("API unavailable")
+        const todosData = await todosRes.json()
 
         const fetchedTasks: Task[] = todosData
           .slice(0, 30)
@@ -143,8 +177,9 @@ export function TaskProvider({ children }: { children: ReactNode }) {
 
         setProjects(fetchedProjects)
         setTasks(fetchedTasks)
-      } catch (error) {
-        console.error("Error fetching data:", error)
+      } catch {
+        setProjects(fallbackProjects)
+        setTasks(fallbackTasks)
       } finally {
         setLoading(false)
       }
@@ -195,6 +230,7 @@ export function TaskProvider({ children }: { children: ReactNode }) {
       value={{
         projects,
         tasks,
+        loading,
         darkMode,
         toggleDarkMode,
         addProject,

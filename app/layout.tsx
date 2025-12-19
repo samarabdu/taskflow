@@ -10,8 +10,8 @@ const _geistMono = Geist_Mono({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   title: "TaskFlow - Task Management",
-  description: "Task and Project Management App ",
-  generator: "",
+  description: "Task and Project Management App - Mini Trello",
+  generator: "v0.app",
   icons: {
     icon: [
       {
