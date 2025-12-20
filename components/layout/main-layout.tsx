@@ -6,7 +6,7 @@ import { Footer } from "@/components/layout/footer"
 import { useTask } from "@/context/task-context"
 // object shape
 interface MainLayoutProps {
-  children: React.ReactNode
+  children: React.ReactNode //identify props
 }
 
 export function MainLayout({ children }: MainLayoutProps) {
