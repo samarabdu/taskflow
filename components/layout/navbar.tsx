@@ -31,6 +31,7 @@ export function Navbar() {
         </Link>
 
         {/* Navigation Links */}
+        {/* لن يظهر على الشاشات الصغيرة (mobile) */}
         <nav className="hidden md:flex items-center gap-1">
           {navLinks.map((link) => {
             const Icon = link.icon
