@@ -55,7 +55,29 @@ export function Navbar() {
 
         {/* Right Side Actions */}
         <div className="flex items-center gap-2">
-          {/* Mobile Menu */}
+          {/* Desktop Navigation Links */}
+          <nav className="hidden md:flex items-center gap-1">
+            {navLinks.map((link) => {
+              const Icon = link.icon
+              const isActive = pathname === link.href
+              return (
+                <Button
+                  key={link.href}
+                  variant={isActive ? "secondary" : "ghost"}
+                  size="sm"
+                  asChild
+                  className={cn("transition-colors", isActive && "bg-primary/10 text-primary hover:bg-primary/20")}
+                >
+                  <Link href={link.href}>
+                    <Icon className="h-4 w-4 mr-2" />
+                    {link.label}
+                  </Link>
+                </Button>
+              )
+            })}
+          </nav>
+
+          {/* Mobile Navigation Links */}
           <nav className="flex md:hidden items-center gap-1">
             {navLinks.map((link) => {
               const Icon = link.icon

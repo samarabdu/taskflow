@@ -15,10 +15,7 @@ export default function Dashboard() {
     <MainLayout>
       {/* Hero Section */}
       <div className="mb-10 text-center">
-        <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 text-sm text-primary mb-4">
-          <Sparkles className="h-4 w-4" />
-          <span>Manage tasks with ease</span>
-        </div>
+
         <h1 className="text-4xl font-bold mb-3 text-balance">
           Welcome to{" "}
           <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">TaskFlow</span>
