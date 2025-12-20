@@ -17,7 +17,7 @@ import Link from "next/link"
 function AddTaskForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const defaultProjectId = searchParams.get("projectId") || ""
+  const defaultProjectId = searchParams.get("projectId") || ""//null
 
   const { projects, addTask } = useTask()
 
